@@ -32,6 +32,7 @@
 |-------|:-------------:|-------|-----------|
 | id | sim | int | O id da categoria para os itens
 | name | sim | texto | O nome da categoria
+| items | sim | object | Onde os itens serão armazenados
 
 ### Listar Categorias
 
@@ -87,6 +88,7 @@
 |-------|:-------------:|-------|-----------|
 | id | sim | int | O id da categoria para os itens
 | name | sim | texto | O nome da categoria
+| items | sim | object | Onde os itens serão armazenados
 
 ### Excluir Categoria
 
@@ -105,7 +107,10 @@
   "items": {
     "id": 1,
     "name": "Item 1",
-    "price": 10.00
+    "price": 10.00,
+    "description": "Description of Item 1",
+    "image": url,
+    "daysOfTheWeek": [0,1,2]
   }
 }
 ```
@@ -116,6 +121,9 @@
 | id | sim | int | O id do item
 | name | sim | texto | O nome do item do cardápio
 | price | sim | double | O preco do item
+| description | não | texto | A descrição do item do cardápio
+| image | não | texto | O envio de um arquivo de imagem
+| daysOfTheWeek | não | array | Um array de números dos dias da semana
 
 ### Listar Itens
 
@@ -128,12 +136,18 @@
   {
     "id": 1,
     "name": "Item 1",
-    "price": 10.00
+    "price": 10.00,
+    "description": "Description of Item 1",
+    "image": url,
+    "daysOfTheWeek": [0,1,2]
   },
   {
     "id": 2,
     "name": "Item 2",
-    "price": 15.00
+    "price": 15.00,
+    "description": "Description of Item 2",
+    "image": url,
+    "daysOfTheWeek": [0,2,4]
   }
 }
 ```
@@ -148,7 +162,10 @@
 {
   "id": 1,
   "name": "Item 1",
-  "price": 10.00
+  "price": 10.00,
+  "description": "Description of Item 1",
+  "image": url,
+  "daysOfTheWeek": [0,1,2]
 }
 ```
 
@@ -162,7 +179,10 @@
 {
   "id": 1,
   "name": "Item 1",
-  "price": 10.00
+  "price": 10.00,
+  "description": "Description of Item 1",
+  "image": url,
+  "daysOfTheWeek": [0,1,2]
 }
 ```
 
@@ -172,6 +192,9 @@
 | id | sim | int | O id do item
 | name | sim | texto | O nome do item do cardápio
 | price | sim | double | O preco do item
+| description | não | texto | A descrição do item do cardápio
+| image | não | texto | O envio de um arquivo de imagem
+| daysOfTheWeek | não | array | Um array de números dos dias da semana
 
 ### Excluir Item
 
