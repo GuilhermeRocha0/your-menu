@@ -34,6 +34,14 @@
 | name | sim | texto | O nome da categoria
 | items | sim | object | Onde os itens serão armazenados
 
+**Códigos da Resposta**
+
+|código|descrição
+|-|-
+201 | a categoria foi cadastrada com sucesso
+400 | os dados enviados são inválidos
+
+
 ### Listar Categorias
 
 `GET` yourmenu/api/v1/categories
@@ -55,6 +63,14 @@
 }
 ```
 
+**Códigos da Resposta**
+
+|código|descrição
+|-|-
+200 | os dados da categoria foram retornados
+404 | não existe categoria com o ID informado
+
+
 ### Visualizar Categoria
 
 `GET` yourmenu/api/v1/categories/{id}
@@ -68,6 +84,12 @@
   "items": {}
 }
 ```
+
+|código|descrição
+|-|-
+200 | os dados da categoria foram retornados
+404 | não existe categoria com o ID informado
+
 
 ### Editar Categorias
 
