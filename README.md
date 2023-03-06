@@ -18,7 +18,6 @@
 `POST` yourmenu/api/v1/categories
 
 **Exemplo de Entrada**
-
 ```js
 {
   "id": 1,
@@ -35,11 +34,11 @@
 | items | sim | object | Onde os itens serão armazenados
 
 **Códigos da Resposta**
-
 |código|descrição
 |-|-
 201 | a categoria foi cadastrada com sucesso
 400 | os dados enviados são inválidos
+
 
 
 ### Listar Categorias
@@ -47,7 +46,6 @@
 `GET` yourmenu/api/v1/categories
 
 **Exemplo de Saida**
-
 ```js
 {
   {
@@ -64,11 +62,11 @@
 ```
 
 **Códigos da Resposta**
-
 |código|descrição
 |-|-
-200 | os dados da categoria foram retornados
-404 | não existe categoria com o ID informado
+200 | os dados das categorias foram retornados
+404 | não existe categorias
+
 
 
 ### Visualizar Categoria
@@ -76,7 +74,6 @@
 `GET` yourmenu/api/v1/categories/{id}
 
 **Exemplo de Saida**
-
 ```js
 {
   "id": 1,
@@ -85,10 +82,11 @@
 }
 ```
 
+**Códigos da Resposta**
 |código|descrição
 |-|-
-200 | os dados da categoria foram retornados
-404 | não existe categoria com o ID informado
+| 200 | os dados da categoria foram retornados
+| 404 | não existe categoria com o ID informado
 
 
 ### Editar Categorias
@@ -96,7 +94,6 @@
 `PUT` yourmenu/api/v1/categories/{id}
 
 **Exemplo de Entrada**
-
 ```js
 {
   "id": 1,
@@ -112,16 +109,32 @@
 | name | sim | texto | O nome da categoria
 | items | sim | object | Onde os itens serão armazenados
 
+**Códigos da Resposta**
+|código|descrição
+|-|-
+| 200 | os dados da categoria foram atualizados
+| 404 | não existe categoria com o ID informado
+
+
+
 ### Excluir Categoria
 
 `DELETE` yourmenu/api/v1/categories/{id}
+
+**Códigos da Resposta**
+|código|descrição
+|-|-
+| 200 | os dados da categoria foram excluídos
+| 202 | os dados da categoria foram encontrados mas não ainda excluídos
+| 204 | houve a ação de excluir mas os dados da categoria não foram encontrados
+
+
 
 ### Cadastro de Itens
 
 `POST` yourmenu/api/v1/categories/{id}/items
 
 **Exemplo de Entrada**
-
 ```js
 {
   "id": 1,
@@ -147,12 +160,19 @@
 | image | não | texto | O envio de um arquivo de imagem
 | daysOfTheWeek | não | array | Um array de números dos dias da semana
 
+**Códigos da Resposta**
+|código|descrição
+|-|-
+201 | o item foi cadastrada com sucesso
+400 | os dados enviados são inválidos
+
+
+
 ### Listar Itens
 
 `GET` yourmenu/api/v1/categories/{id}/items
 
 **Exemplo de Saida**
-
 ```js
 {
   {
@@ -174,12 +194,19 @@
 }
 ```
 
+**Códigos da Resposta**
+|código|descrição
+|-|-
+200 | os dados dos itens foram retornados
+404 | não existe itens nessa categoria
+
+
+
 ### Visualizar Item
 
 `GET` yourmenu/api/v1/categories/{id}/items/{id}
 
 **Exemplo de Saida**
-
 ```js
 {
   "id": 1,
@@ -191,12 +218,19 @@
 }
 ```
 
+**Códigos da Resposta**
+|código|descrição
+|-|-
+| 200 | os dados do item foram retornados
+| 404 | não existe item com o ID informado nessa categoria
+
+
+
 ### Editar Itens
 
 `PUT` yourmenu/api/v1/categories/{id}/items/{id}
 
 **Exemplo de Entrada**
-
 ```js
 {
   "id": 1,
@@ -218,6 +252,21 @@
 | image | não | texto | O envio de um arquivo de imagem
 | daysOfTheWeek | não | array | Um array de números dos dias da semana
 
+**Códigos da Resposta**
+|código|descrição
+|-|-
+| 200 | os dados do item foram atualizados
+| 404 | não existe item com o ID informado
+
+
+
 ### Excluir Item
 
 `DELETE` yourmenu/api/v1/categories/{id}/items/{id}
+
+**Códigos da Resposta**
+|código|descrição
+|-|-
+| 200 | os dados do item foram excluídos
+| 202 | os dados do item foram encontrados mas não ainda excluídos
+| 204 | houve a ação de excluir mas os dados do item não foram encontrados
