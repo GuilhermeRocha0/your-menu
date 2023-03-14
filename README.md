@@ -22,7 +22,7 @@
 {
   "id": 1,
   "name": "Main Dishes",
-  "items": {}
+  "items": []
 }
 ```
 
@@ -47,18 +47,18 @@
 
 **Exemplo de Saida**
 ```js
-{
+[
   {
     "id": 1,
     "name": "Main Dishes",
-    "items": {}
+    "items": []
   },
   {
     "id": 2,
     "name": "Entrees",
-    "items": {}
+    "items": []
   }
-}
+]
 ```
 
 **Códigos da Resposta**
@@ -78,7 +78,7 @@
 {
   "id": 1,
   "name": "Main Dishes",
-  "items": {}
+  "items": []
 }
 ```
 
@@ -98,7 +98,7 @@
 {
   "id": 1,
   "name": "Main dishes",
-  "items": {}
+  "items": []
 }
 ```
 
@@ -138,15 +138,11 @@
 ```js
 {
   "id": 1,
-  "name": "Main dishes",
-  "items": {
-    "id": 1,
-    "name": "Item 1",
-    "price": 10.00,
-    "description": "Description of Item 1",
-    "image": url,
-    "daysOfTheWeek": [0,1,2]
-  }
+  "name": "Item 1",
+  "price": 10.00,
+  "description": "Description of Item 1",
+  "image": url,
+  "daysOfTheWeek": [0,1,2]
 }
 ```
 
@@ -174,7 +170,7 @@
 
 **Exemplo de Saida**
 ```js
-{
+[
   {
     "id": 1,
     "name": "Item 1",
@@ -191,7 +187,7 @@
     "image": url,
     "daysOfTheWeek": [0,2,4]
   }
-}
+]
 ```
 
 **Códigos da Resposta**
