@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// import br.com.fiap.yourmenu.models.Categories;
 import br.com.fiap.yourmenu.models.Items;
 
 @RestController
 @RequestMapping("/api/v1/categories")
 public class ItemsController {
 
-    @GetMapping(value = "/1/items")
+    @GetMapping(value = "/{categoryId}/items")
     public List<Object> getItemsByCategory() {
         Object[] items = {
                 new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2)),
@@ -25,7 +26,7 @@ public class ItemsController {
         return itemsList;
     }
 
-    @GetMapping(value = "/1/items/1")
+    @GetMapping(value = "/{categoryId}/items/{itemId}")
     public Items getItemByCategoryAndId() {
         return new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2));
     }

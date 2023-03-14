@@ -44,9 +44,8 @@ public class Categories {
         this.items = items;
     }
 
-    public List<Items> addItemToList(Items i1) {
-        items.add(i1);
-        return items;
+    public void addItemToList(Items item) {
+        items.add(item);
     }
 
 }

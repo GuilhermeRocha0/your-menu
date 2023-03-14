@@ -28,7 +28,7 @@ public class CategoriesController {
         return categoriesList;
     }
 
-    @GetMapping(value = "/categories/1")
+    @GetMapping(value = "/categories/{categoryId}")
     public Categories getCategoriesById() {
         return new Categories(1l, "Main Dishes",
                 Arrays.asList(new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2))));
