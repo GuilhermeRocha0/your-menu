@@ -17,20 +17,23 @@ import br.com.fiap.yourmenu.models.Items;
 public class CategoriesController {
 
     @GetMapping(value = "/categories")
-    public List<Object> getCategories() {
-        Object[] categories = {
-                new Categories(1l, "Main Dishes",
-                        Arrays.asList(new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2)))),
-                new Categories(1l, "Entrees",
-                        Arrays.asList(new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2))))
-        };
-        List<Object> categoriesList = new ArrayList<>(Arrays.asList(categories));
+    public List<Categories> getCategories() {
+        Categories category1 = new Categories(1l, "Main Dishes",
+                Arrays.asList());
+        Categories category2 = new Categories(2l, "Entrees",
+                Arrays.asList());
+        Categories[] categories = { category1, category2 };
+
+        List<Categories> categoriesList = new ArrayList<>(Arrays.asList(categories));
         return categoriesList;
     }
 
     @GetMapping(value = "/categories/{categoryId}")
     public Categories getCategoriesById() {
-        return new Categories(1l, "Main Dishes",
-                Arrays.asList(new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2))));
+        Categories category = new Categories(1l, "Main Dishes",
+                Arrays.asList());
+        Items item = new Items(1l, "Item 1", new BigDecimal(10), null, null, Arrays.asList(0, 1, 2));
+        category.addItemToList(item);
+        return category;
     }
 }
