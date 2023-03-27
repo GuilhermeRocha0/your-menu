@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Items {
+public class Item {
 
     public Long id;
     public String name;
@@ -13,7 +13,7 @@ public class Items {
     public String image;
     public List<Integer> daysOfTheWeek = new ArrayList<Integer>();
 
-    public Items(Long id, String name, BigDecimal price, String description, String image,
+    public Item(Long id, String name, BigDecimal price, String description, String image,
             List<Integer> daysOfTheWeek) {
         this.id = id;
         this.name = name;

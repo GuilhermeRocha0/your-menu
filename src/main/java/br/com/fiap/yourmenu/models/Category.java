@@ -1,20 +1,18 @@
 package br.com.fiap.yourmenu.models;
 
 import java.util.ArrayList;
-// import java.util.ArrayList;
-// import java.util.List;
 import java.util.List;
 
-public class Categories {
+public class Category {
 
     public Long id;
     public String name;
-    public List<Items> items;
+    public List<Item> items;
 
-    public Categories() {
+    public Category() {
     }
 
-    public Categories(Long id, String name, List<Items> items) {
+    public Category(Long id, String name, List<Item> items) {
         this.id = id;
         this.name = name;
         this.items = new ArrayList<>();
@@ -36,16 +34,12 @@ public class Categories {
         this.name = name;
     }
 
-    public List<Items> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Items> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
-    }
-
-    public void addItemToList(Items item) {
-        items.add(item);
     }
 
 }
