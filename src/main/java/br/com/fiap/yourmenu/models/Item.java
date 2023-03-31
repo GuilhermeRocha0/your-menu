@@ -4,8 +4,22 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "items")
 public class Item {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     public String name;
     public BigDecimal price;
@@ -13,10 +27,18 @@ public class Item {
     public String image;
     public List<Integer> daysOfTheWeek = new ArrayList<Integer>();
 
-    public Item(Long id, String name, BigDecimal price, String description, String image,
+    @JsonIgnoreProperties("items")
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private Category category;
+
+    public Item() {
+    }
+
+    public Item(String name, Category category, BigDecimal price, String description, String image,
             List<Integer> daysOfTheWeek) {
-        this.id = id;
         this.name = name;
+        this.category = category;
         this.price = price;
         this.description = description;
         this.image = image;
@@ -69,6 +91,14 @@ public class Item {
 
     public void setDaysOfTheWeek(List<Integer> daysOfTheWeek) {
         this.daysOfTheWeek = daysOfTheWeek;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
 }
