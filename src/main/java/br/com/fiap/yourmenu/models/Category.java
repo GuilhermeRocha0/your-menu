@@ -12,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "categories")
@@ -21,6 +24,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @NotBlank
+    @Size(min = 5, max = 255, message = "deve ser um nome significativo")
     public String name;
 
     @JsonIgnoreProperties("category")

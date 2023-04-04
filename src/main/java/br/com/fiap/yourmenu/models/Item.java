@@ -13,6 +13,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "items")
@@ -21,9 +25,18 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
+    @NotBlank
+    @Size(min = 5, max = 255, message = "deve ser um nome significativo")
     public String name;
+
+    @NotNull
+    @Min(value = 0, message = "deve ser um valor positivo")
     public BigDecimal price;
+
+    @Size(min = 5, max = 255, message = "deve ser uma descrição significativa")
     public String description;
+
     public String image;
     public List<Integer> daysOfTheWeek = new ArrayList<Integer>();
 

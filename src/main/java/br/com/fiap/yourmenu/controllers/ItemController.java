@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.yourmenu.exception.RestNotFoundException;
+import br.com.fiap.yourmenu.models.Category;
 import br.com.fiap.yourmenu.models.Item;
 import br.com.fiap.yourmenu.repositories.CategoryRepository;
 import br.com.fiap.yourmenu.repositories.ItemRepository;
@@ -41,12 +43,9 @@ public class ItemController {
     public ResponseEntity<List<Item>> showItemsByCategory(@PathVariable Long categoryId) {
         log.info("Buscando itens da categoria: " + categoryId);
 
-        var categoryFound = categoryRepository.findById(categoryId);
+        var category = getCategory(categoryId);
 
-        if (categoryFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        List<Item> items = categoryFound.get().getItems();
+        List<Item> items = category.getItems();
         return ResponseEntity.ok(items);
     }
 
@@ -54,12 +53,9 @@ public class ItemController {
     public ResponseEntity<Item> showItemById(@PathVariable Long id) {
         log.info("Buscando categoria: " + id);
 
-        var itemFound = itemRepository.findById(id);
+        var item = getItem(id);
 
-        if (itemFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        return ResponseEntity.ok(itemFound.get());
+        return ResponseEntity.ok(item);
     }
 
     @PutMapping("categories/{categoryId}/items")
@@ -68,14 +64,9 @@ public class ItemController {
 
         log.info("Criando item na categoria " + categoryId);
 
-        var categoryFound = categoryRepository.findById(categoryId);
-        log.info("Categoria: " + categoryFound.get());
-
-        if (categoryFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        categoryFound.get().items.add(item);
-        item.setCategory(categoryFound.get());
+        var category = getCategory(categoryId);
+        category.items.add(item);
+        item.setCategory(category);
         itemRepository.save(item);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -85,17 +76,9 @@ public class ItemController {
     public ResponseEntity<Item> deleteItem(@PathVariable Long categoryId, @PathVariable Long id) {
         log.info("Apagando categoria: " + id);
 
-        var categoryFound = categoryRepository.findById(categoryId);
-
-        if (categoryFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        var itemFound = itemRepository.findById(id);
-
-        if (itemFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        itemRepository.delete(itemFound.get());
+        getCategory(categoryId);
+        var item = getItem(id);
+        itemRepository.delete(item);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -106,115 +89,25 @@ public class ItemController {
 
         log.info("Criando item na categoria: " + id);
 
-        var itemFound = itemRepository.findById(id);
+        var itemFound = getItem(id);
 
-        if (itemFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        var categoryId = itemFound.get().getCategory().id;
-        var categoryFound = categoryRepository.findById(categoryId);
-
-        if (categoryFound.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        var categoryId = itemFound.getCategory().id;
+        var category = getCategory(categoryId);
 
         item.setId(id);
-        item.setCategory(categoryFound.get());
+        item.setCategory(category);
         itemRepository.save(item);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // // Items
+    private Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RestNotFoundException("despesa não encontrada"));
+    }
 
-    // @GetMapping("{id}/items")
-    // public ResponseEntity<List<Item>> showItems(@PathVariable Long id) {
-    // log.info("Buscando itens da categoria: " + id);
-
-    // var categoryFound = categoryRepository.findById(id);
-
-    // if (categoryFound.isEmpty())
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    // var category = categoryFound.get();
-    // List<Item> items = itemRepository.findAll();
-    // // List<Item> items = itemRepository.findAllByCategoryId(id);
-
-    // return ResponseEntity.ok(items);
-    // }
-
-    // @PutMapping("{id}/items")
-    // public ResponseEntity<Category> createItem(@PathVariable Long id,
-    // @RequestBody Item item) {
-
-    // log.info("Criando item na categoria: " + id);
-
-    // var categoryFound = categoryRepository.findById(id);
-
-    // if (categoryFound.isEmpty())
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    // // var category = categoryFound.get();
-    // // categories.remove(categoryFound.get());
-
-    // // item.setId(category.items.size() + 1L);
-    // // category.setId(id);
-    // // category.items.add(item);
-
-    // // categories.add(category);
-
-    // itemRepository.save(item);
-
-    // return ResponseEntity.status(HttpStatus.CREATED).build();
-    // }
-
-    // @DeleteMapping("{id}/items/{itemId}")
-    // public ResponseEntity<Item> deleteItem(@PathVariable Long id, @PathVariable
-    // Long itemId) {
-    // log.info("Apagando categoria: " + id);
-
-    // var categoryFound = categories.stream().filter(c ->
-    // c.getId().equals(id)).findFirst();
-
-    // if (categoryFound.isEmpty())
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    // var category = categoryFound.get();
-    // var itemFound = category.items.stream().filter(i ->
-    // i.getId().equals(itemId)).findFirst();
-
-    // if (itemFound.isEmpty())
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    // category.items.remove(itemFound.get());
-
-    // return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    // }
-
-    // @PutMapping("{id}/items/{itemId}")
-    // public ResponseEntity<Category> updateItem(@PathVariable Long id,
-    // @PathVariable Long itemId,
-    // @RequestBody Item item) {
-
-    // log.info("Criando item na categoria: " + id);
-
-    // var categoryFound = categories.stream().filter(c ->
-    // c.getId().equals(id)).findFirst();
-
-    // if (categoryFound.isEmpty())
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    // var category = categoryFound.get();
-    // categories.remove(categoryFound.get());
-
-    // category.setId(id);
-
-    // category.items.remove(item);
-    // item.setId(itemId);
-    // category.items.add(item);
-
-    // categories.add(category);
-
-    // return ResponseEntity.status(HttpStatus.CREATED).build();
-    // }
+    private Item getItem(Long id) {
+        return itemRepository.findById(id).orElseThrow(() -> new RestNotFoundException("item não encontrado"));
+    }
 
 }
