@@ -20,6 +20,7 @@ import br.com.fiap.yourmenu.models.Category;
 import br.com.fiap.yourmenu.models.Item;
 import br.com.fiap.yourmenu.repositories.CategoryRepository;
 import br.com.fiap.yourmenu.repositories.ItemRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -60,7 +61,7 @@ public class ItemController {
 
     @PutMapping("categories/{categoryId}/items")
     public ResponseEntity<Item> createItem(@PathVariable Long categoryId,
-            @RequestBody Item item) {
+            @RequestBody @Valid Item item) {
 
         log.info("Criando item na categoria " + categoryId);
 
@@ -85,7 +86,7 @@ public class ItemController {
 
     @PutMapping("categories/{categoryId}/items/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable Long id,
-            @RequestBody Item item) {
+            @RequestBody @Valid Item item) {
 
         log.info("Criando item na categoria: " + id);
 
