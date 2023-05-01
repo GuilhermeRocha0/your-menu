@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,40 +44,48 @@ public class ItemController {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    PagedResourcesAssembler assembler;
+
     @GetMapping("items")
-    public Page<Item> showAllItems(
+    public PagedModel<EntityModel<Item>> showAllItems(
             @RequestParam(required = false) String search,
             @PageableDefault(size = 3) Pageable pageable) {
-        if (search == null) {
-            return itemRepository.findAll(pageable);
-        }
-        return itemRepository.findByNameContaining(search, pageable);
+
+        var items = search == null
+                ? itemRepository.findAll(pageable)
+                : itemRepository.findByNameContaining(search, pageable);
+
+        return assembler.toModel(items.map(Item::toEntityModel));
     }
 
     @GetMapping("categories/{categoryId}/items")
-    public ResponseEntity<List<Item>> showItemsByCategory(
+    public PagedModel<EntityModel<List<Item>>> showItemsByCategory(
             @PathVariable Long categoryId,
             @PageableDefault(size = 3) Pageable pageable) {
         log.info("Buscando itens da categoria: " + categoryId);
 
         getCategory(categoryId);
 
-        List<Item> items = itemRepository.findItemsByCategoryId(categoryId, pageable);
+        var items = itemRepository.findItemsByCategoryId(categoryId, pageable);
 
-        return ResponseEntity.ok(items);
+        return assembler.toModel(items.map(Item::toEntityModel));
     }
 
     @GetMapping("categories/{categoryId}/items/{id}")
-    public ResponseEntity<Item> showItemById(@PathVariable Long id) {
+    public ResponseEntity<Item> showItemById(
+            @PathVariable Long categoryId,
+            @PathVariable Long id) {
         log.info("Buscando categoria: " + id);
 
+        getCategory(categoryId);
         var item = getItem(id);
 
         return ResponseEntity.ok(item);
     }
 
     @PutMapping("categories/{categoryId}/items")
-    public ResponseEntity<Item> createItem(@PathVariable Long categoryId,
+    public ResponseEntity<EntityModel<Item>> createItem(@PathVariable Long categoryId,
             @RequestBody @Valid Item item) {
 
         log.info("Criando item na categoria " + categoryId);
@@ -83,7 +95,9 @@ public class ItemController {
         item.setCategory(category);
         itemRepository.save(item);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity
+                .created(item.toEntityModel().getRequiredLink("self").toUri())
+                .body(item.toEntityModel());
     }
 
     @DeleteMapping("categories/{categoryId}/items/{id}")
@@ -98,7 +112,7 @@ public class ItemController {
     }
 
     @PutMapping("categories/{categoryId}/items/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable Long id,
+    public ResponseEntity<EntityModel<Item>> updateItem(@PathVariable Long id,
             @RequestBody @Valid Item item) {
 
         log.info("Criando item na categoria: " + id);
@@ -112,7 +126,7 @@ public class ItemController {
         item.setCategory(category);
         itemRepository.save(item);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(item.toEntityModel());
     }
 
     private Category getCategory(Long categoryId) {

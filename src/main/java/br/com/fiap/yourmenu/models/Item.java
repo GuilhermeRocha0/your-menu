@@ -4,8 +4,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import br.com.fiap.yourmenu.controllers.CategoryController;
+import br.com.fiap.yourmenu.controllers.ItemController;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,13 +27,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "items")
-public class Item {
+public class Item extends EntityModel<Item> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +59,15 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;
+
+    public EntityModel<Item> toEntityModel() {
+        return EntityModel.of(
+                this,
+                linkTo(methodOn(ItemController.class).showItemById(this.getCategory().getId(), id)).withSelfRel(),
+                linkTo(methodOn(ItemController.class).deleteItem(this.getCategory().getId(), id)).withRel("delete"),
+                linkTo(methodOn(ItemController.class).showAllItems(null, Pageable.unpaged())).withRel("all"),
+                linkTo(methodOn(CategoryController.class).showCategoryById(this.getCategory().getId()))
+                        .withRel("category"));
+    }
 
 }

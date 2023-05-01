@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -37,14 +41,18 @@ public class CategoryController {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    PagedResourcesAssembler<Object> assembler;
+
     @GetMapping
-    public Page<Category> showAllCategories(
+    public PagedModel<EntityModel<Object>> showAllCategories(
             @RequestParam(required = false) String search,
             @PageableDefault(size = 1) Pageable pageable) {
-        if (search == null)
-            return categoryRepository.findAll(pageable);
+        var categories = search == null
+                ? categoryRepository.findAll(pageable)
+                : categoryRepository.findByNameContaining(search, pageable);
 
-        return categoryRepository.findByNameContaining(search, pageable);
+        return assembler.toModel(categories.map(Category::toEntityModel));
     }
 
     @GetMapping("{id}")
@@ -54,12 +62,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(
+    public ResponseEntity<EntityModel<Category>> createCategory(
             @RequestBody @Valid Category category,
             BindingResult result) {
         log.info("Cadastrando categorias: " + category);
         categoryRepository.save(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(category);
+        return ResponseEntity
+                .created(category.toEntityModel().getRequiredLink("self").toUri())
+                .body(category.toEntityModel());
     }
 
     @DeleteMapping("{id}")
@@ -70,14 +80,14 @@ public class CategoryController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Category> updateCategory(
+    public ResponseEntity<EntityModel<Category>> updateCategory(
             @PathVariable Long id,
             @RequestBody @Valid Category category) {
         log.info("Atualizando categoria" + id);
         getCategory(id);
         category.setId(id);
         categoryRepository.save(category);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(category.toEntityModel());
     }
 
     private Category getCategory(Long id) {
