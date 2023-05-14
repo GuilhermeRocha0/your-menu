@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.yourmenu.service.TokenService;
 import br.com.fiap.yourmenu.models.Credential;
 import br.com.fiap.yourmenu.models.User;
 import br.com.fiap.yourmenu.repositories.UserRepository;
@@ -25,7 +26,10 @@ public class UserController {
     @Autowired
     PasswordEncoder encoder;
 
-    @PostMapping("/api/signup")
+    @Autowired
+    TokenService tokenService;
+
+    @PostMapping("/api/registrar")
     public ResponseEntity<User> registrar(@RequestBody @Valid User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         repository.save(user);
@@ -35,7 +39,8 @@ public class UserController {
     @PostMapping("/api/login")
     public ResponseEntity<Object> login(@RequestBody Credential credential) {
         manager.authenticate(credential.toAuthentication());
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken(credential);
+        return ResponseEntity.ok(token);
     }
 
 }
