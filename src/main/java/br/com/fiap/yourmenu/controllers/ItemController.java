@@ -28,12 +28,19 @@ import br.com.fiap.yourmenu.models.Category;
 import br.com.fiap.yourmenu.models.Item;
 import br.com.fiap.yourmenu.repositories.CategoryRepository;
 import br.com.fiap.yourmenu.repositories.ItemRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "item")
 public class ItemController {
 
     Logger log = LoggerFactory.getLogger(ItemController.class);
@@ -48,6 +55,7 @@ public class ItemController {
     PagedResourcesAssembler assembler;
 
     @GetMapping("items")
+    @Operation(summary = "Visualizar todos os item", description = "Retornar os dados de todos os itens")
     public PagedModel<EntityModel<Item>> showAllItems(
             @RequestParam(required = false) String search,
             @PageableDefault(size = 3) Pageable pageable) {
@@ -60,6 +68,7 @@ public class ItemController {
     }
 
     @GetMapping("categories/{categoryId}/items")
+    @Operation(summary = "Visualizar itens da categoria", description = "Retornar os dados de todos os itens da categoria de acordo com o categoryId informado no path")
     public PagedModel<EntityModel<List<Item>>> showItemsByCategory(
             @PathVariable Long categoryId,
             @PageableDefault(size = 3) Pageable pageable) {
@@ -73,6 +82,7 @@ public class ItemController {
     }
 
     @GetMapping("categories/{categoryId}/items/{id}")
+    @Operation(summary = "Detalhes do item", description = "Retornar os dados do item de acordo com o categoryId e o id informado no path")
     public ResponseEntity<Item> showItemById(
             @PathVariable Long categoryId,
             @PathVariable Long id) {
@@ -85,6 +95,11 @@ public class ItemController {
     }
 
     @PutMapping("categories/{categoryId}/items")
+    @Operation(summary = "Criar item")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "o item foi cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "os dados enviados são inválidos")
+    })
     public ResponseEntity<EntityModel<Item>> createItem(@PathVariable Long categoryId,
             @RequestBody @Valid Item item) {
 
@@ -101,6 +116,7 @@ public class ItemController {
     }
 
     @DeleteMapping("categories/{categoryId}/items/{id}")
+    @Operation(summary = "Exluir item")
     public ResponseEntity<Item> deleteItem(@PathVariable Long categoryId, @PathVariable Long id) {
         log.info("Apagando categoria: " + id);
 
@@ -112,6 +128,7 @@ public class ItemController {
     }
 
     @PutMapping("categories/{categoryId}/items/{id}")
+    @Operation(summary = "Editar item")
     public ResponseEntity<EntityModel<Item>> updateItem(@PathVariable Long id,
             @RequestBody @Valid Item item) {
 

@@ -28,12 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.fiap.yourmenu.exception.RestNotFoundException;
 import br.com.fiap.yourmenu.models.Category;
 import br.com.fiap.yourmenu.repositories.CategoryRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/categories")
 @Slf4j
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "category")
 public class CategoryController {
 
     Logger log = LoggerFactory.getLogger(CategoryController.class);
@@ -45,6 +52,7 @@ public class CategoryController {
     PagedResourcesAssembler<Object> assembler;
 
     @GetMapping
+    @Operation(summary = "Visualizar todas as categorias", description = "Retornar os dados de todas categorias")
     public PagedModel<EntityModel<Object>> showAllCategories(
             @RequestParam(required = false) String search,
             @PageableDefault(size = 1) Pageable pageable) {
@@ -56,12 +64,18 @@ public class CategoryController {
     }
 
     @GetMapping("{id}")
+    @Operation(summary = "Detalhes da categoria", description = "Retornar os dados da categoria de acordo com o id informado no path")
     public ResponseEntity<Category> showCategoryById(@PathVariable Long id) {
         log.info("Buscando categoria: " + id);
         return ResponseEntity.ok(getCategory(id));
     }
 
     @PostMapping
+    @Operation(summary = "Criar categoria")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "a categoria foi cadastrada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "os dados enviados são inválidos")
+    })
     public ResponseEntity<EntityModel<Category>> createCategory(
             @RequestBody @Valid Category category,
             BindingResult result) {
@@ -73,6 +87,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("{id}")
+    @Operation(summary = "Excluir categoria")
     public ResponseEntity<Category> deleteCategory(@PathVariable Long id) {
         log.info("Apagando categoria: " + id);
         categoryRepository.delete(getCategory(id));
@@ -80,6 +95,7 @@ public class CategoryController {
     }
 
     @PutMapping("{id}")
+    @Operation(summary = "Editar categoria")
     public ResponseEntity<EntityModel<Category>> updateCategory(
             @PathVariable Long id,
             @RequestBody @Valid Category category) {
