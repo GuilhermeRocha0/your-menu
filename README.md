@@ -21,7 +21,7 @@
 ```js
 {
   "id": 1,
-  "name": "Main Dishes",
+  "name": "Category 1",
   "items": []
 }
 ```
@@ -50,12 +50,12 @@
 [
   {
     "id": 1,
-    "name": "Main Dishes",
+    "name": "Category 1",
     "items": []
   },
   {
     "id": 2,
-    "name": "Entrees",
+    "name": "Category 2",
     "items": []
   }
 ]
@@ -77,7 +77,7 @@
 ```js
 {
   "id": 1,
-  "name": "Main Dishes",
+  "name": "Category 1",
   "items": []
 }
 ```
@@ -97,7 +97,7 @@
 ```js
 {
   "id": 1,
-  "name": "Main dishes",
+  "name": "Category 1",
   "items": []
 }
 ```
@@ -142,7 +142,11 @@
   "price": 10.00,
   "description": "Description of Item 1",
   "image": url,
-  "daysOfTheWeek": [0,1,2]
+  "daysOfTheWeek": [0,1,2],
+	"category": {
+		"id": 1,
+		"name": "Category 1"
+	}
 }
 ```
 
@@ -166,6 +170,47 @@
 
 ### Listar Itens
 
+`GET` yourmenu/api/v1/items
+
+**Exemplo de Saida**
+```js
+[
+  {
+    "id": 1,
+    "name": "Item 1",
+    "price": 20.00,
+    "description": null,
+    "image": url,
+    "daysOfTheWeek": [0,1,2,3,4,5,6],
+    "category": {
+      "id": 1,
+      "name": "Category 1"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Item 2",
+    "price": 15.00,
+    "description": "Description of Item 2",
+    "image": url,
+    "daysOfTheWeek": [0,2,4],
+    "category": {
+      "id": 1,
+      "name": "Category 1"
+    }
+  }
+]
+```
+
+**Códigos da Resposta**
+|código|descrição
+|-|-
+200 | os dados dos itens foram retornados
+404 | não existe itens nessa categoria
+
+
+### Listar Itens da Categoria
+
 `GET` yourmenu/api/v1/categories/{id}/items
 
 **Exemplo de Saida**
@@ -177,7 +222,11 @@
     "price": 10.00,
     "description": "Description of Item 1",
     "image": url,
-    "daysOfTheWeek": [0,1,2]
+    "daysOfTheWeek": [0,1,2],
+    "category": {
+      "id": 1,
+      "name": "Category 1"
+    }
   },
   {
     "id": 2,
@@ -185,7 +234,11 @@
     "price": 15.00,
     "description": "Description of Item 2",
     "image": url,
-    "daysOfTheWeek": [0,2,4]
+    "daysOfTheWeek": [0,2,4]],
+    "category": {
+      "id": 1,
+      "name": "Category 1"
+    }
   }
 ]
 ```
@@ -210,7 +263,11 @@
   "price": 10.00,
   "description": "Description of Item 1",
   "image": url,
-  "daysOfTheWeek": [0,1,2]
+  "daysOfTheWeek": [0,1,2],
+  "category": {
+    "id": 1,
+    "name": "Category 1"
+  }
 }
 ```
 
@@ -234,7 +291,11 @@
   "price": 10.00,
   "description": "Description of Item 1",
   "image": url,
-  "daysOfTheWeek": [0,1,2]
+  "daysOfTheWeek": [0,1,2],
+  "category": {
+    "id": 1,
+    "name": "Category 1"
+  }
 }
 ```
 
