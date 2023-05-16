@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.yourmenu.service.TokenService;
 import br.com.fiap.yourmenu.models.Credential;
-import br.com.fiap.yourmenu.models.User;
+import br.com.fiap.yourmenu.models.UserModel;
 import br.com.fiap.yourmenu.repositories.UserRepository;
 import jakarta.validation.Valid;
 
@@ -29,8 +29,8 @@ public class UserController {
     @Autowired
     TokenService tokenService;
 
-    @PostMapping("/api/registrar")
-    public ResponseEntity<User> registrar(@RequestBody @Valid User user) {
+    @PostMapping("/api/signup")
+    public ResponseEntity<UserModel> registrar(@RequestBody @Valid UserModel user) {
         user.setPassword(encoder.encode(user.getPassword()));
         repository.save(user);
         return ResponseEntity.ok(user);

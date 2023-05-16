@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.fiap.yourmenu.models.User;
+import br.com.fiap.yourmenu.models.UserModel;
 import br.com.fiap.yourmenu.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,7 +31,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
         // se tiver um token e ele for valido, autenticar
         if (token != null) {
-            User user = tokenService.getUserByToken(token);
+            UserModel user = tokenService.getUserByToken(token);
             Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null,
                     user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);

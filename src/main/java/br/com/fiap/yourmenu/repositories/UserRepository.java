@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.fiap.yourmenu.models.User;
+import br.com.fiap.yourmenu.models.UserModel;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserModel, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<UserModel> findByEmail(String email);
 
 }

@@ -13,7 +13,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 
 import br.com.fiap.yourmenu.models.Credential;
 import br.com.fiap.yourmenu.models.Token;
-import br.com.fiap.yourmenu.models.User;
+import br.com.fiap.yourmenu.models.UserModel;
 import br.com.fiap.yourmenu.repositories.UserRepository;
 
 @Service
@@ -35,7 +35,7 @@ public class TokenService {
         return new Token(token, "JWT", "Bearer");
     }
 
-    public User getUserByToken(String token) {
+    public UserModel getUserByToken(String token) {
         Algorithm alg = Algorithm.HMAC256(secret);
         var email = JWT.require(alg)
                 .withIssuer("Nubeck")
