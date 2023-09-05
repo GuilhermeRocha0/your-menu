@@ -3,6 +3,7 @@ package br.com.fiap.yourmenu.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -19,14 +20,15 @@ public class SecurityConfig {
     @Autowired
     AuthorizationFilter authorizationFilter;
 
+    @Autowired
+    Environment env;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/signup", "/api/login").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
@@ -34,8 +36,15 @@ public class SecurityConfig {
                 .and()
                 .headers().frameOptions().sameOrigin()
                 .and()
-                .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        if (env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equals("open")) {
+            http.authorizeHttpRequests().anyRequest().permitAll();
+        } else {
+            http.authorizeHttpRequests().anyRequest().authenticated();
+        }
+
+        return http.build();
     }
 
     @Bean
