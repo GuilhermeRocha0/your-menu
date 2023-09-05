@@ -53,14 +53,8 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Visualizar todas as categorias", description = "Retornar os dados de todas categorias")
-    public PagedModel<EntityModel<Object>> showAllCategories(
-            @RequestParam(required = false) String search,
-            @PageableDefault(size = 1) Pageable pageable) {
-        var categories = search == null
-                ? categoryRepository.findAll(pageable)
-                : categoryRepository.findByNameContaining(search, pageable);
-
-        return assembler.toModel(categories.map(Category::toEntityModel));
+    public List<Category> showAllCategories() {
+        return categoryRepository.findAll();
     }
 
     @GetMapping("{id}")
@@ -76,14 +70,12 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "a categoria foi cadastrada com sucesso"),
             @ApiResponse(responseCode = "400", description = "os dados enviados são inválidos")
     })
-    public ResponseEntity<EntityModel<Category>> createCategory(
+    public ResponseEntity<Category> createCategory(
             @RequestBody @Valid Category category,
             BindingResult result) {
         log.info("Cadastrando categorias: " + category);
         categoryRepository.save(category);
-        return ResponseEntity
-                .created(category.toEntityModel().getRequiredLink("self").toUri())
-                .body(category.toEntityModel());
+        return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
     @DeleteMapping("{id}")
@@ -96,14 +88,14 @@ public class CategoryController {
 
     @PutMapping("{id}")
     @Operation(summary = "Editar categoria")
-    public ResponseEntity<EntityModel<Category>> updateCategory(
+    public ResponseEntity<Category> updateCategory(
             @PathVariable Long id,
             @RequestBody @Valid Category category) {
         log.info("Atualizando categoria" + id);
         getCategory(id);
         category.setId(id);
         categoryRepository.save(category);
-        return ResponseEntity.ok(category.toEntityModel());
+        return ResponseEntity.ok(category);
     }
 
     private Category getCategory(Long id) {

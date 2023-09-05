@@ -49,13 +49,4 @@ public class Category extends EntityModel<Category> {
         this.name = name;
     }
 
-    public EntityModel<Category> toEntityModel() {
-        return EntityModel.of(
-                this,
-                linkTo(methodOn(CategoryController.class).showCategoryById(id)).withSelfRel(),
-                linkTo(methodOn(CategoryController.class).deleteCategory(id)).withRel("delete"),
-                linkTo(methodOn(CategoryController.class).showAllCategories(null, Pageable.unpaged())).withRel("all"),
-                linkTo(methodOn(ItemController.class).showItemsByCategory(id, Pageable.unpaged())).withRel("items"));
-    }
-
 }
