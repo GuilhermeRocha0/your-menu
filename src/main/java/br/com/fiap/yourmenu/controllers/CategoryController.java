@@ -54,6 +54,7 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "Visualizar todas as categorias", description = "Retornar os dados de todas categorias")
     public List<Category> showAllCategories() {
+        log.info("Buscando todas as categorias");
         return categoryRepository.findAll();
     }
 
